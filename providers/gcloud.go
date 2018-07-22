@@ -98,3 +98,12 @@ func (g *GCloudProvider) SelectCluster(cluster string) error {
 	zone := strings.Split(cluster, "\t")[1]
 	return exec.Command("gcloud", "container", "clusters", "get-credentials", clusterID, "--zone", zone, "--project", g.ProjectID).Run()
 }
+
+// Authenticate attempts to initiate authentication by means of the `gcloud auth login --launch-browser` command.
+func (g *GCloudProvider) Authenticate() error {
+	_, err := exec.Command("gcloud", "auth", "login", "--launch-browser").Output()
+	if err != nil {
+		return errors.Wrap(err, "Failed to initiate authentication")
+	}
+	return err
+}
