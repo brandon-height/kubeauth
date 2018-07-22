@@ -24,7 +24,15 @@ func main() {
 		log.Fatalln(err)
 	}
 	if len(accs) == 0 {
-		log.Fatalln("google-cloud-sdk is not authentificated to any account")
+		if err := gcloud.Authenticate(); err != nil {
+			log.Fatalln(err)
+		}
+		// Now that we've authenticated, try to Re-Read the accounts again and exit if
+		// we got an error.
+		accs, err = gcloud.ReadAccounts()
+		if err != nil {
+			log.Fatalln(err)
+		}
 	}
 
 	if len(accs) > 1 {
