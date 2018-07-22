@@ -18,6 +18,7 @@ var (
 func main() {
 	fmt.Printf("version=%s, build=%s\n", Version, Build)
 	gcloud := providers.GCloudProvider{}
+	kube := providers.KubeConfig{}
 	accs, err := gcloud.ReadAccounts()
 	if err != nil {
 		log.Fatalln(err)
@@ -85,7 +86,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	contexts, err := gcloud.ReadNamespaces(cluster)
+	contexts, err := kube.ReadContexts(cluster)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -100,7 +101,7 @@ func main() {
 		nil,
 	)
 
-	err = gcloud.SelectContext(context)
+	err = kube.SelectContext(context)
 	if err != nil {
 		log.Fatalln(err)
 	}
